@@ -45,7 +45,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Inventory)
 	FORCEINLINE bool IsStackable() const noexcept
 	{
-		return MaxStackSize == 1;
+		return MaxStackSize > 1;
 	}
 
 protected:
