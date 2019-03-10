@@ -183,6 +183,16 @@ bool UTheVillageInventoryComponent::HasItemExact(UThyVillageItem* Item, const in
 	return FoundItemsCount == Amount;
 }
 
+FInventoryItem UTheVillageInventoryComponent::GetItem(const int32 Index) const
+{
+	if(Index < 0 || Index >= Size)
+	{
+		return {};
+	}
+
+	return Items[Index];
+}
+
 void UTheVillageInventoryComponent::PostInitProperties()
 {
 	Super::PostInitProperties();

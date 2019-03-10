@@ -8,15 +8,15 @@
 
 class UThyVillageItem;
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FInventoryItem
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, Category = Item)
 	UThyVillageItem *Item{ nullptr };
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, Category = Item)
 	int32 StackSize{};
 
 	int32 AddToStack(int32 Amount);
@@ -63,8 +63,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Inventory)
 	bool HasItemExact(UThyVillageItem *Item, int32 Amount = 1) const;
 
-
-	// todo, get item
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	FInventoryItem GetItem(int32 Index) const;
 
 protected:
 	void PostInitProperties() override;
