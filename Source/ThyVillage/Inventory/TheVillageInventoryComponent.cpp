@@ -107,17 +107,131 @@ int32 UTheVillageInventoryComponent::AddItem(UThyVillageItem* const Item, const 
 
 bool UTheVillageInventoryComponent::AddItemExact(UThyVillageItem* Item, int32 Amount)
 {
-	return true;
+	if (!Item)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot add a nullptr item."));
+		return false;
+	}
+
+	if (Amount < 1)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot add 0 or less items."));
+		return false;
+	}
+
+	auto ItemsCopy{ Items };
+	if (Item->IsStackable())
+	{
+		// Fill any existing stacks of the @Item first
+		for (auto& ComponentItem : ItemsCopy)
+		{
+			if (ComponentItem.Item == Item)
+			{
+				Amount -= ComponentItem.AddToStack(Amount);
+			}
+
+			if (Amount == 0)
+			{
+				break;
+			}
+		}
+	}
+
+	// Add leftover by adding new stacks of the @Item
+	if (Amount > 0)
+	{
+		for (auto& ComponentItem : ItemsCopy)
+		{
+			if (!ComponentItem.Item)
+			{
+				ComponentItem.Item = Item;
+				Amount -= ComponentItem.AddToStack(Amount);
+			}
+
+			if (Amount == 0)
+			{
+				break;
+			}
+		}
+	}
+
+	if(Amount == 0)
+	{
+		Items = std::move(ItemsCopy);
+		return true;
+	}
+
+	return false;
 }
 
-int32 UTheVillageInventoryComponent::RemoveItem(UThyVillageItem* Item, int32 Amount)
+int32 UTheVillageInventoryComponent::RemoveItem(UThyVillageItem* Item, const int32 Amount)
 {
-	return 0;
+	if (!Item)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot remove a nullptr item."));
+		return 0;
+	}
+
+	// todo<?>, use 0 for remove all?
+	if (Amount < 1)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot remove 0 or less items."));
+		return 0;
+	}
+
+	int32 LeftToRemove{ Amount };
+	for (auto& ComponentItem : Items)
+	{
+		if (ComponentItem.Item == Item)
+		{
+			LeftToRemove -= ComponentItem.RemoveFromStack(LeftToRemove);
+		}
+
+		if (LeftToRemove == 0)
+		{
+			break;
+		}
+	}
+
+	return Amount - LeftToRemove;
 }
 
 bool UTheVillageInventoryComponent::RemoveItemExact(UThyVillageItem* Item, int32 Amount)
 {
-	return true;
+	if (!Item)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot remove a nullptr item."));
+		return false;
+	}
+
+	// todo<?>, use 0 for remove all?
+	if (Amount < 1)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot remove 0 or less items."));
+		return false;
+	}
+
+	auto ItemsCopy{ Items };
+	for (auto& ComponentItem : ItemsCopy)
+	{
+		if (ComponentItem.Item == Item)
+		{
+			Amount -= ComponentItem.RemoveFromStack(Amount);
+		}
+
+		if (Amount == 0)
+		{
+			break;
+		}
+	}
+
+	if(Amount == 0)
+	{
+		Items = std::move(ItemsCopy);
+		return true;
+	}
+
+	return false;
 }
 
 bool UTheVillageInventoryComponent::HasItem(UThyVillageItem* const Item, const int32 Amount) const
