@@ -63,8 +63,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Inventory)
 	bool HasItemExact(UThyVillageItem *Item, int32 Amount = 1) const;
 
+	/* Returns a shallow copy of item at @Index, if @Index is invalid, returns an empty Item*/
 	UFUNCTION(BlueprintCallable, Category = Inventory)
 	FInventoryItem GetItem(int32 Index) const;
+
+	/* Swaps items at @Index1 and @Index2 positions.
+	 * If items at @Index1 and @Index2 are the same item (type), the function moves stacks from @Index1 to @Index2
+	 */
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	bool SwapItem(int32 Index1, int32 Index2);
 
 protected:
 	void PostInitProperties() override;

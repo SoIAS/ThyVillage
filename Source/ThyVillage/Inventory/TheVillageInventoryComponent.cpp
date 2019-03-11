@@ -301,10 +301,46 @@ FInventoryItem UTheVillageInventoryComponent::GetItem(const int32 Index) const
 {
 	if(Index < 0 || Index >= Size)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot get item, invalid Index."));
 		return {};
 	}
 
 	return Items[Index];
+}
+
+bool UTheVillageInventoryComponent::SwapItem(int32 Index1, int32 Index2)
+{
+	if (Index1 < 0 || Index1 >= Size)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot swap items, Index1 is invalid."));
+		return false;
+	}
+
+	if (Index2 < 0 || Index2 >= Size)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot swap items, Index2 is invalid."));
+		return false;
+	}
+
+	if (Index1 == Index2)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot swap items, Index1 is the same as Index2."));
+		return false;
+	}
+
+	auto& Item1 = Items[Index1];
+	auto& Item2 = Items[Index2];
+	if(Item1.Item == Item2.Item)
+	{
+		const int32 StacksMoved = Item2.AddToStack(Item1.StackSize);
+		Item1.RemoveFromStack(StacksMoved);
+	}
+	else
+	{
+		Swap(Item1, Item2);
+	}
+
+	return true;
 }
 
 void UTheVillageInventoryComponent::PostInitProperties()
