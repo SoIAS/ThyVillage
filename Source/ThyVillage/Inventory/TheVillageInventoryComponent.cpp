@@ -164,6 +164,47 @@ bool UTheVillageInventoryComponent::AddItemExact(UThyVillageItem* Item, int32 Am
 	return false;
 }
 
+bool UTheVillageInventoryComponent::AddItemAt(const int32 Index, UThyVillageItem* Item, int32 Amount)
+{
+	if (Index < 0 || Index >= Size)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot add item, Index is invalid."));
+		return false;
+	}
+
+	if (!Item)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot add a nullptr item."));
+		return false;
+	}
+
+	if (Amount < 1)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot add 0 or less items."));
+		return false;
+	}
+
+	FInventoryItem NewItem{ Item, 0 };
+	if(HasItemAt(Index))
+	{
+		if(Items[Index].Item != Item)
+		{
+			return false;
+		}
+
+		NewItem = Items[Index];
+	}
+
+	Amount -= NewItem.AddToStack(Amount);
+	if (Amount == 0)
+	{
+		Items[Index] = NewItem;
+		return true;
+	}
+
+	return false;
+}
+
 int32 UTheVillageInventoryComponent::RemoveItem(UThyVillageItem* Item, const int32 Amount)
 {
 	if (!Item)
@@ -194,6 +235,20 @@ int32 UTheVillageInventoryComponent::RemoveItem(UThyVillageItem* Item, const int
 	}
 
 	return Amount - LeftToRemove;
+}
+
+FInventoryItem UTheVillageInventoryComponent::RemoveItemAt(int32 Index)
+{
+	if (Index < 0 || Index >= Size)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot remove item, Index is invalid."));
+		return {};
+	}
+
+	const FInventoryItem RemovedItem = Items[Index];
+	Items[Index] = {};
+
+	return RemovedItem;
 }
 
 bool UTheVillageInventoryComponent::RemoveItemExact(UThyVillageItem* Item, int32 Amount)
@@ -297,6 +352,19 @@ bool UTheVillageInventoryComponent::HasItemExact(UThyVillageItem* Item, const in
 	return FoundItemsCount == Amount;
 }
 
+
+bool UTheVillageInventoryComponent::HasItemAt(const int32 Index)
+{
+	if (Index < 0 || Index >= Size)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot find item, Index is invalid."));
+		return false;
+	}
+
+	const auto& Item = Items[Index];
+	return Item.Item && Item.StackSize > 0;
+}
+
 FInventoryItem UTheVillageInventoryComponent::GetItem(const int32 Index) const
 {
 	if(Index < 0 || Index >= Size)
@@ -341,6 +409,27 @@ bool UTheVillageInventoryComponent::SwapItem(int32 Index1, int32 Index2)
 	}
 
 	return true;
+}
+
+int32 UTheVillageInventoryComponent::GetItemCount(UThyVillageItem* Item) const
+{
+	// Since blueprints don't have int64 and we may overflow :(
+	int64 ItemCount{ 0 };
+	for (const auto& ComponentItem : Items)
+	{
+		if (ComponentItem.Item == Item)
+		{
+			ItemCount += ComponentItem.StackSize;
+		}
+	}
+
+	if(ItemCount > TNumericLimits<int32>::Max())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ItemCount is greater than int32 maximum value"));
+		return TNumericLimits<int32>::Max();
+	}
+
+	return static_cast<int32>(ItemCount);
 }
 
 void UTheVillageInventoryComponent::PostInitProperties()
