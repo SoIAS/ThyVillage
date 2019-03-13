@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "TheVillageInventoryComponent.generated.h"
 
+// todo, change The.. to Thy
+
 class UThyVillageItem;
 
 USTRUCT(BlueprintType)
