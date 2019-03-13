@@ -18,6 +18,17 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = UI)
 	void ToggleInventory();
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = UI)
+	void OpenInventory();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = UI)
+	void CloseInventory();
+
+	FORCEINLINE UThyVillageInventoryManager* GetInventoryManager() const noexcept
+	{
+		return InventoryManager;
+	}
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Inventory)
 	UThyVillageInventoryManager* InventoryManager;
