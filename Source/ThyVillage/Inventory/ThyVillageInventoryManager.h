@@ -8,6 +8,13 @@
 
 class UTheVillageInventoryComponent;
 
+UENUM(BlueprintType)
+enum class EInventoryType : uint8
+{
+	PlayerInventory,
+	StorageInventory
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class THYVILLAGE_API UThyVillageInventoryManager : public UActorComponent
 {
@@ -18,7 +25,11 @@ public:
 
 	/* Sets the new Player inventory */
 	UFUNCTION(BlueprintCallable, category = Inventory)
-	void SetPlayerInventory(UTheVillageInventoryComponent* PlayerInventory);
+	void SetPlayerInventory(UTheVillageInventoryComponent* NewPlayerInventory);
+
+	/* Sets the new Storage inventory */
+	UFUNCTION(BlueprintCallable, category = Inventory)
+	void SetStorageInventory(UTheVillageInventoryComponent* NewStorageInventory);
 
 	/* Returns if player inventory can be used (can be implemented in blueprints)
 	 * Returns true by default
@@ -30,7 +41,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayerInventoryChanged(UTheVillageInventoryComponent* PlayerInventory);
 
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	bool SwapItem(EInventoryType SourceInventoryType, int32 SourceIndex,
+		EInventoryType DestinationInventoryType, int32 DestinationIndex);
 
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	UTheVillageInventoryComponent* GetInventory(EInventoryType InventoryType) const;
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
