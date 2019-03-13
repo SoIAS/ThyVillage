@@ -20,7 +20,7 @@ void UThyVillageInventoryManager::SetPlayerInventory(UTheVillageInventoryCompone
 void UThyVillageInventoryManager::SetStorageInventory(UTheVillageInventoryComponent* const NewStorageInventory)
 {
 	StorageInventory = NewStorageInventory;
-	//callback
+	StorageInventoryChanged(StorageInventory);
 }
 
 bool UThyVillageInventoryManager::SwapItem(const EInventoryType SourceInventoryType, const int32 SourceIndex,
@@ -84,7 +84,7 @@ UTheVillageInventoryComponent* UThyVillageInventoryManager::GetInventory(EInvent
 		return StorageInventory;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Invalid inventory type"));
+	UE_LOG(LogTemp, Error, TEXT("Invalid inventory type"));
 	return nullptr;
 }
 

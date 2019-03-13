@@ -39,12 +39,20 @@ public:
 
 	/* Event called when player inventory changes (not the contents themselves though)*/
 	UFUNCTION(BlueprintImplementableEvent)
-	void PlayerInventoryChanged(UTheVillageInventoryComponent* PlayerInventory);
+	void PlayerInventoryChanged(UTheVillageInventoryComponent* NewPlayerInventory);
 
+	/* Event called when storage inventory changes (not the contents themselves though)*/
+	UFUNCTION(BlueprintImplementableEvent)
+	void StorageInventoryChanged(UTheVillageInventoryComponent* NewStorageInventory);
+
+	/* Swap items between inventories 
+	 * Returns true if succeeded, false otherwise
+	 */
 	UFUNCTION(BlueprintCallable, Category = Inventory)
 	bool SwapItem(EInventoryType SourceInventoryType, int32 SourceIndex,
 		EInventoryType DestinationInventoryType, int32 DestinationIndex);
 
+	/* Returns inventory of inventory type or nullptr if one is not set */
 	UFUNCTION(BlueprintCallable, Category = Inventory)
 	UTheVillageInventoryComponent* GetInventory(EInventoryType InventoryType) const;
 
