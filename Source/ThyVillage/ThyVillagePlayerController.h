@@ -52,6 +52,10 @@ protected:
 	UThyVillageInventoryManager* InventoryManager;
 
 public:
+	/* */
+	UFUNCTION(BlueprintImplementableEvent, Category = Interaction)
+	void OnInteractionTooltip(bool bShow, AThyVillageInteractableActor* InteractableObjet);
+
 	/* Tries to interact with object the player is looking at */
 	void TryInteraction();
 
@@ -61,6 +65,13 @@ public:
 	/* Called when interaction ends */
 	void OnEndInteraction(AThyVillageInteractableActor* InteractionObject);
 
+protected:
+	FHitResult GetInteractionHitResult() const;
+	AThyVillageInteractableActor* GetInteractionHitActor() const;
+
+private:
 	/* Current object the player is interacting with */
 	AThyVillageInteractableActor* CurrentlyInteractingWith;
+
+	bool bInteractionTooltipShown;
 };

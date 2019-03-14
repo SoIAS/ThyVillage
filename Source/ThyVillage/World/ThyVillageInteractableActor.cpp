@@ -11,6 +11,8 @@ AThyVillageInteractableActor::AThyVillageInteractableActor()
 
 	MinimumDistance = 200;
 	bIsInteractable = true;
+
+	InteractableName = "Default Interactable";
 }
 
 void AThyVillageInteractableActor::BeginInteraction(AThyVillagePlayerController* PlayerController)

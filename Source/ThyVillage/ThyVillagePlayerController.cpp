@@ -12,6 +12,8 @@ AThyVillagePlayerController::AThyVillagePlayerController()
 	InventoryManager = nullptr;
 
 	CurrentlyInteractingWith = nullptr;
+
+	bInteractionTooltipShown = false;
 }
 
 void AThyVillagePlayerController::PlayerTick(const float DeltaTime)
@@ -23,6 +25,24 @@ void AThyVillagePlayerController::PlayerTick(const float DeltaTime)
 		if (!CurrentlyInteractingWith->IsWithinMinimumDistance(this))
 		{
 			CurrentlyInteractingWith->EndInteraction(this);
+		}
+	}
+
+	if (!CurrentlyInteractingWith)
+	{
+		if (const auto HitInteractable = GetInteractionHitActor())
+		{
+			// todo, chekc if it was saem actor as before?
+			if (!bInteractionTooltipShown && HitInteractable->IsWithinMinimumDistance(this))
+			{
+				OnInteractionTooltip(true, HitInteractable);
+				bInteractionTooltipShown = true;
+			}
+		}
+		else if (bInteractionTooltipShown)
+		{
+			OnInteractionTooltip(false, HitInteractable);
+			bInteractionTooltipShown = false;
 		}
 	}
 }
@@ -51,34 +71,21 @@ void AThyVillagePlayerController::SetupInputComponent()
 
 void AThyVillagePlayerController::TryInteraction()
 {
-	constexpr int32 TraceLength = 5000;
-	const auto BeginTraceLocation = PlayerCameraManager->GetCameraLocation();
-	const auto EndTraceLocation = BeginTraceLocation + PlayerCameraManager->GetActorForwardVector() * TraceLength;
-
-	// temp
-	DrawDebugLine(GetWorld(), BeginTraceLocation, EndTraceLocation, FColor{ 255,0,0 }, true, 100, 0, 3);
-
-	FHitResult HitResult{};
-	if (!GetWorld()->LineTraceSingleByChannel(HitResult, BeginTraceLocation, EndTraceLocation, ECollisionChannel::ECC_Visibility))
-	{
-		return;
-	}
-
-	if (const auto HitInteractable = Cast<AThyVillageInteractableActor>(HitResult.GetActor()))
+	if (const auto HitInteractable = GetInteractionHitActor())
 	{
 		if (HitInteractable->IsWithinMinimumDistance(this))
 		{
 			HitInteractable->BeginInteraction(this);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Log, TEXT("TOO FAR AWAY"));
 		}
 	}
 }
 
 void AThyVillagePlayerController::OnBeginInteraction(AThyVillageInteractableActor* const InteractionObject)
 {
+	// no need to show the interaction tooltip anymore
+	OnInteractionTooltip(false, nullptr);
+	bInteractionTooltipShown = false;
+
 	if (CurrentlyInteractingWith == InteractionObject)
 	{
 		return;
@@ -95,4 +102,23 @@ void AThyVillagePlayerController::OnBeginInteraction(AThyVillageInteractableActo
 void AThyVillagePlayerController::OnEndInteraction(AThyVillageInteractableActor* const InteractionObject)
 {
 	CurrentlyInteractingWith = nullptr;
+}
+
+FHitResult AThyVillagePlayerController::GetInteractionHitResult() const
+{
+	constexpr int32 TraceLength = 5000;
+	const auto BeginTraceLocation = PlayerCameraManager->GetCameraLocation();
+	const auto EndTraceLocation = BeginTraceLocation + PlayerCameraManager->GetActorForwardVector() * TraceLength;
+
+	FHitResult HitResult{};
+	GetWorld()->LineTraceSingleByChannel(HitResult, BeginTraceLocation, EndTraceLocation, ECollisionChannel::ECC_Visibility);
+
+	return HitResult;
+}
+
+AThyVillageInteractableActor* AThyVillagePlayerController::GetInteractionHitActor() const
+{
+	const auto HitResult = GetInteractionHitResult();
+
+	return Cast<AThyVillageInteractableActor>(HitResult.GetActor());
 }

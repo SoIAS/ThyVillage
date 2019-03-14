@@ -47,4 +47,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Interactable)
 	bool bIsInteractable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Interactable)
+	FName InteractableName;
 };
