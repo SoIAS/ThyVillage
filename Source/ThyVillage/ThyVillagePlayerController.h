@@ -15,6 +15,8 @@ class THYVILLAGE_API AThyVillagePlayerController : public APlayerController
 public:
 	AThyVillagePlayerController();
 
+	void SetupInputComponent() override;
+
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = UI)
 	void ToggleInventory();
 
@@ -23,6 +25,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = UI)
 	void CloseInventory();
+
+	void TryInteraction();
 
 	FORCEINLINE UThyVillageInventoryManager* GetInventoryManager() const noexcept
 	{
