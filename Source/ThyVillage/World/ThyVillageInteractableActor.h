@@ -23,10 +23,10 @@ public:
 	void EndInteraction(AThyVillagePlayerController* PlayerController);
 
 	UFUNCTION(BlueprintNativeEvent, Category = Interactable)
-	void OnBeginInteraction(AThyVillagePlayerController* PlayerController) const;
+	void OnBeginInteraction(AThyVillagePlayerController* PlayerController);
 
 	UFUNCTION(BlueprintNativeEvent, Category = Interactable)
-	void OnEndInteraction(AThyVillagePlayerController* PlayerController) const;
+	void OnEndInteraction(AThyVillagePlayerController* PlayerController);
 
 	FORCEINLINE float GetMinimumDistance() const
 	{
@@ -48,6 +48,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Interactable)
 	bool bIsInteractable;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Interactable)
-	FName InteractableName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Interactable)
+	FString InteractableName;
 };

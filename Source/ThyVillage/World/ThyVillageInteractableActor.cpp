@@ -33,11 +33,11 @@ void AThyVillageInteractableActor::EndInteraction(AThyVillagePlayerController* P
 	PlayerController->OnEndInteraction(this);
 }
 
-void AThyVillageInteractableActor::OnBeginInteraction_Implementation(AThyVillagePlayerController* PlayerController) const
+void AThyVillageInteractableActor::OnBeginInteraction_Implementation(AThyVillagePlayerController* PlayerController)
 {
 }
 
-void AThyVillageInteractableActor::OnEndInteraction_Implementation(AThyVillagePlayerController* PlayerController) const
+void AThyVillageInteractableActor::OnEndInteraction_Implementation(AThyVillagePlayerController* PlayerController)
 {
 }
 

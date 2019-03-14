@@ -16,8 +16,8 @@ class THYVILLAGE_API AThyVillageStorageActor : public AThyVillageInteractableAct
 public:
 	AThyVillageStorageActor();
 
-	void OnBeginInteraction_Implementation(AThyVillagePlayerController* PlayerController) const override;
-	void OnEndInteraction_Implementation(AThyVillagePlayerController* PlayerController) const override;
+	void OnBeginInteraction_Implementation(AThyVillagePlayerController* PlayerController) override;
+	void OnEndInteraction_Implementation(AThyVillagePlayerController* PlayerController) override;
 
 protected:
 	UPROPERTY(EditDefaultsOnly)

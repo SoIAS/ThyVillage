@@ -7,6 +7,7 @@
 
 class UTheVillageInventoryComponent;
 class AThyVillagePlayerController;
+class UThyVillageItem;
 
 UENUM(BlueprintType)
 enum class EInventoryType : uint8
@@ -58,6 +59,8 @@ public:
 	/* Returns inventory of inventory type or nullptr if one is not set */
 	UFUNCTION(BlueprintCallable, Category = Inventory)
 	UTheVillageInventoryComponent* GetInventory(EInventoryType InventoryType) const;
+
+	void PickupItem(UThyVillageItem* Item, int32 Amount);
 
 protected:
 	/* Non owning pointer to existing player inventory */

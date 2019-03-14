@@ -11,7 +11,7 @@ AThyVillageStorageActor::AThyVillageStorageActor()
 	AddOwnedComponent(InventoryComponent);
 }
 
-void AThyVillageStorageActor::OnBeginInteraction_Implementation(AThyVillagePlayerController* PlayerController) const
+void AThyVillageStorageActor::OnBeginInteraction_Implementation(AThyVillagePlayerController* PlayerController)
 {
 	if (!PlayerController || !PlayerController->IsValidLowLevel())
 	{
@@ -23,7 +23,7 @@ void AThyVillageStorageActor::OnBeginInteraction_Implementation(AThyVillagePlaye
 	PlayerController->OpenInventory();
 }
 
-void AThyVillageStorageActor::OnEndInteraction_Implementation(AThyVillagePlayerController* PlayerController) const
+void AThyVillageStorageActor::OnEndInteraction_Implementation(AThyVillagePlayerController* PlayerController)
 {
 	if (!PlayerController || !PlayerController->IsValidLowLevel())
 	{

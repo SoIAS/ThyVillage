@@ -102,3 +102,20 @@ bool UThyVillageInventoryManager::CanPlayerUseInventory_Implementation() const
 {
 	return true;
 }
+
+void UThyVillageInventoryManager::PickupItem(UThyVillageItem* const Item, int32 Amount)
+{
+	if(!Item || Amount <= 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot pickup invalid item"));
+		return;
+	}
+
+	const int32 AddedAmount = PlayerInventory->AddItem(Item, Amount);
+	Amount -= AddedAmount;
+
+	if(Amount > 0)
+	{
+		// spawn new pikcup item
+	}
+}
