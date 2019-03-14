@@ -2,13 +2,13 @@
 
 #include "ThyVillageInventoryManager.h"
 #include "TheVillageInventoryComponent.h"
+#include "ThyVillagePlayerController.h"
 
 UThyVillageInventoryManager::UThyVillageInventoryManager()
 {
-	PrimaryComponentTick.bCanEverTick = false;
-
 	PlayerInventory = nullptr;
 	StorageInventory = nullptr;
+	OwningPlayerController = nullptr;
 }
 
 void UThyVillageInventoryManager::SetPlayerInventory(UTheVillageInventoryComponent* const NewPlayerInventory)
@@ -21,6 +21,16 @@ void UThyVillageInventoryManager::SetStorageInventory(UTheVillageInventoryCompon
 {
 	StorageInventory = NewStorageInventory;
 	StorageInventoryChanged(StorageInventory);
+}
+
+void UThyVillageInventoryManager::SetOwningPlayerController(AThyVillagePlayerController* PlayerController)
+{
+	if (!PlayerController)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Settings owning player controller to invalid object"));
+	}
+
+	OwningPlayerController = PlayerController;
 }
 
 bool UThyVillageInventoryManager::SwapItem(const EInventoryType SourceInventoryType, const int32 SourceIndex,

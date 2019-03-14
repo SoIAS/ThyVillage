@@ -5,7 +5,7 @@
 
 int32 FInventoryItem::AddToStack(const int32 Amount)
 {
-	if(!Item)
+	if (!Item)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cannot add to stack whose item is nullptr."));
 		return 0;
@@ -27,10 +27,10 @@ int32 FInventoryItem::RemoveFromStack(const int32 Amount)
 		return 0;
 	}
 
-	if(StackSize < Amount)
+	if (StackSize < Amount)
 	{
 		const int32 RemovedAmount = StackSize;
-		
+
 		StackSize = 0;
 		Item = nullptr;
 
@@ -38,7 +38,7 @@ int32 FInventoryItem::RemoveFromStack(const int32 Amount)
 	}
 
 	StackSize -= Amount;
-	if(StackSize == 0)
+	if (StackSize == 0)
 	{
 		Item = nullptr;
 	}
@@ -155,7 +155,7 @@ bool UTheVillageInventoryComponent::AddItemExact(UThyVillageItem* Item, int32 Am
 		}
 	}
 
-	if(Amount == 0)
+	if (Amount == 0)
 	{
 		Items = std::move(ItemsCopy);
 		return true;
@@ -185,9 +185,9 @@ bool UTheVillageInventoryComponent::AddItemAt(const int32 Index, UThyVillageItem
 	}
 
 	FInventoryItem NewItem{ Item, 0 };
-	if(HasItemAt(Index))
+	if (HasItemAt(Index))
 	{
-		if(Items[Index].Item != Item)
+		if (Items[Index].Item != Item)
 		{
 			return false;
 		}
@@ -280,7 +280,7 @@ bool UTheVillageInventoryComponent::RemoveItemExact(UThyVillageItem* Item, int32
 		}
 	}
 
-	if(Amount == 0)
+	if (Amount == 0)
 	{
 		Items = std::move(ItemsCopy);
 		return true;
@@ -343,7 +343,7 @@ bool UTheVillageInventoryComponent::HasItemExact(UThyVillageItem* Item, const in
 			FoundItemsCount += ComponentItem.StackSize;
 		}
 
-		if(FoundItemsCount > Amount)
+		if (FoundItemsCount > Amount)
 		{
 			return false;
 		}
@@ -351,7 +351,6 @@ bool UTheVillageInventoryComponent::HasItemExact(UThyVillageItem* Item, const in
 
 	return FoundItemsCount == Amount;
 }
-
 
 bool UTheVillageInventoryComponent::HasItemAt(const int32 Index)
 {
@@ -367,7 +366,7 @@ bool UTheVillageInventoryComponent::HasItemAt(const int32 Index)
 
 FInventoryItem UTheVillageInventoryComponent::GetItem(const int32 Index) const
 {
-	if(Index < 0 || Index >= Size)
+	if (Index < 0 || Index >= Size)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cannot get item, invalid Index."));
 		return {};
@@ -398,7 +397,7 @@ bool UTheVillageInventoryComponent::SwapItem(int32 Index1, int32 Index2)
 
 	auto& Item1 = Items[Index1];
 	auto& Item2 = Items[Index2];
-	if(Item1.Item == Item2.Item)
+	if (Item1.Item == Item2.Item)
 	{
 		const int32 StacksMoved = Item2.AddToStack(Item1.StackSize);
 		Item1.RemoveFromStack(StacksMoved);
@@ -423,7 +422,7 @@ int32 UTheVillageInventoryComponent::GetItemCount(UThyVillageItem* Item) const
 		}
 	}
 
-	if(ItemCount > TNumericLimits<int32>::Max())
+	if (ItemCount > TNumericLimits<int32>::Max())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("ItemCount is greater than int32 maximum value"));
 		return TNumericLimits<int32>::Max();
@@ -436,7 +435,7 @@ void UTheVillageInventoryComponent::PostInitProperties()
 {
 	Super::PostInitProperties();
 
-	if(Size <= 0)
+	if (Size <= 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Inventory size is set to 0 or lesser"));
 		return;

@@ -7,13 +7,24 @@
 
 #include "DrawDebugHelpers.h"
 
-
-
 AThyVillagePlayerController::AThyVillagePlayerController()
 {
-	InventoryManager = CreateDefaultSubobject<UThyVillageInventoryManager>("Inventory Manager");
+	InventoryManager = nullptr;
+}
 
-	AddOwnedComponent(InventoryManager);
+void AThyVillagePlayerController::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	if (InventoryManagerClass->IsValidLowLevel())
+	{
+		InventoryManager = NewObject<UThyVillageInventoryManager>(this, InventoryManagerClass);
+		InventoryManager->SetOwningPlayerController(this);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Inventory Manager Class is invalid"));
+	}
 }
 
 void AThyVillagePlayerController::SetupInputComponent()
@@ -31,14 +42,14 @@ void AThyVillagePlayerController::TryInteraction()
 
 	// temp
 	DrawDebugLine(GetWorld(), BeginTraceLocation, EndTraceLocation, FColor{ 255,0,0 }, true, 100, 0, 3);
-	
-	FHitResult Hit{};
-	if(!GetWorld()->LineTraceSingleByChannel(Hit, BeginTraceLocation, EndTraceLocation, ECollisionChannel::ECC_Visibility))
+
+	FHitResult HitResult{};
+	if (!GetWorld()->LineTraceSingleByChannel(HitResult, BeginTraceLocation, EndTraceLocation, ECollisionChannel::ECC_Visibility))
 	{
 		return;
 	}
 
-	if(auto HitInteractable = Cast<AThyVillageInteractableActor>(Hit.GetActor()))
+	if (auto HitInteractable = Cast<AThyVillageInteractableActor>(HitResult.GetActor()))
 	{
 		if (HitInteractable->IsWithinMinimumDistance(this))
 		{

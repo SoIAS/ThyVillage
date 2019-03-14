@@ -15,6 +15,10 @@ class THYVILLAGE_API AThyVillagePlayerController : public APlayerController
 public:
 	AThyVillagePlayerController();
 
+protected:
+	void PostInitializeComponents() override;
+
+public:
 	void SetupInputComponent() override;
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = UI)
@@ -35,5 +39,8 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Inventory)
+	TSubclassOf<UThyVillageInventoryManager> InventoryManagerClass;
+
+	UPROPERTY(BlueprintReadOnly, Category = Inventory)
 	UThyVillageInventoryManager* InventoryManager;
 };

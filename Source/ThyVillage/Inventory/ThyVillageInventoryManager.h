@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
 #include "ThyVillageInventoryManager.generated.h"
 
 class UTheVillageInventoryComponent;
+class AThyVillagePlayerController;
 
 UENUM(BlueprintType)
 enum class EInventoryType : uint8
@@ -15,8 +15,8 @@ enum class EInventoryType : uint8
 	StorageInventory
 };
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class THYVILLAGE_API UThyVillageInventoryManager : public UActorComponent
+UCLASS(Blueprintable)
+class THYVILLAGE_API UThyVillageInventoryManager : public UObject
 {
 	GENERATED_BODY()
 
@@ -31,6 +31,9 @@ public:
 	UFUNCTION(BlueprintCallable, category = Inventory)
 	void SetStorageInventory(UTheVillageInventoryComponent* NewStorageInventory);
 
+	/* Sets which player controller owns the inventory manager */
+	void SetOwningPlayerController(AThyVillagePlayerController* PlayerController);
+
 	/* Returns if player inventory can be used (can be implemented in blueprints)
 	 * Returns true by default
 	 */
@@ -38,14 +41,14 @@ public:
 	bool CanPlayerUseInventory() const;
 
 	/* Event called when player inventory changes (not the contents themselves though)*/
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, Category = Inventory)
 	void PlayerInventoryChanged(UTheVillageInventoryComponent* NewPlayerInventory);
 
 	/* Event called when storage inventory changes (not the contents themselves though)*/
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, Category = Inventory)
 	void StorageInventoryChanged(UTheVillageInventoryComponent* NewStorageInventory);
 
-	/* Swap items between inventories 
+	/* Swaps items between inventories 
 	 * Returns true if succeeded, false otherwise
 	 */
 	UFUNCTION(BlueprintCallable, Category = Inventory)
@@ -57,9 +60,15 @@ public:
 	UTheVillageInventoryComponent* GetInventory(EInventoryType InventoryType) const;
 
 protected:
+	/* Non owning pointer to existing player inventory */
 	UPROPERTY(BlueprintReadOnly)
 	UTheVillageInventoryComponent* PlayerInventory;
 
+	/* Non owning pointer to some existing storage inventory */
 	UPROPERTY(BlueprintReadOnly)
 	UTheVillageInventoryComponent* StorageInventory;
+
+	/* Pointer to player controller that owns this manager */
+	UPROPERTY(BlueprintReadOnly)
+	AThyVillagePlayerController* OwningPlayerController;
 };
