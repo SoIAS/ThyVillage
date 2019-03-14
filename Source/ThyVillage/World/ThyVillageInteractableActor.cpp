@@ -15,7 +15,7 @@ AThyVillageInteractableActor::AThyVillageInteractableActor()
 
 void AThyVillageInteractableActor::BeginInteraction(AThyVillagePlayerController* PlayerController)
 {
-	if(!IsWithinMinimumDistance(PlayerController))
+	if (!IsWithinMinimumDistance(PlayerController))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Player is not within mininmum distance to interactable object"));
 		return;
@@ -39,14 +39,14 @@ void AThyVillageInteractableActor::OnEndInteraction_Implementation(AThyVillagePl
 {
 }
 
-bool AThyVillageInteractableActor::IsWithinMinimumDistance(AThyVillagePlayerController* const PlayerController) const
+bool AThyVillageInteractableActor::IsWithinMinimumDistance_Implementation(AThyVillagePlayerController* const PlayerController) const
 {
-	if(!PlayerController || !PlayerController->IsValidLowLevel())
+	if (!PlayerController || !PlayerController->IsValidLowLevel())
 	{
 		return false;
 	}
 
 	const auto* Pawn = PlayerController->GetPawn();
-	
+
 	return Pawn->GetDistanceTo(this) <= GetMinimumDistance();
 }

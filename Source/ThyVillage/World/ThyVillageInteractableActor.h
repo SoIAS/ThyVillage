@@ -38,7 +38,7 @@ public:
 		return bIsInteractable;
 	}
 
-	UFUNCTION(BlueprintCallable, Category = Interactable)
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = Interactable)
 	bool IsWithinMinimumDistance(AThyVillagePlayerController* PlayerController) const;
 
 protected:
