@@ -21,12 +21,14 @@ void AThyVillageInteractableActor::BeginInteraction(AThyVillagePlayerController*
 		return;
 	}
 
+	PlayerController->OnBeginInteraction(this);
 	OnBeginInteraction(PlayerController);
 }
 
 void AThyVillageInteractableActor::EndInteraction(AThyVillagePlayerController* PlayerController)
 {
 	OnEndInteraction(PlayerController);
+	PlayerController->OnEndInteraction(this);
 }
 
 void AThyVillageInteractableActor::OnBeginInteraction_Implementation(AThyVillagePlayerController* PlayerController) const

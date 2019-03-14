@@ -10,6 +10,21 @@
 AThyVillagePlayerController::AThyVillagePlayerController()
 {
 	InventoryManager = nullptr;
+
+	CurrentlyInteractingWith = nullptr;
+}
+
+void AThyVillagePlayerController::PlayerTick(const float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	if (CurrentlyInteractingWith)
+	{
+		if (!CurrentlyInteractingWith->IsWithinMinimumDistance(this))
+		{
+			CurrentlyInteractingWith->EndInteraction(this);
+		}
+	}
 }
 
 void AThyVillagePlayerController::PostInitializeComponents()
@@ -49,7 +64,7 @@ void AThyVillagePlayerController::TryInteraction()
 		return;
 	}
 
-	if (auto HitInteractable = Cast<AThyVillageInteractableActor>(HitResult.GetActor()))
+	if (const auto HitInteractable = Cast<AThyVillageInteractableActor>(HitResult.GetActor()))
 	{
 		if (HitInteractable->IsWithinMinimumDistance(this))
 		{
@@ -60,4 +75,24 @@ void AThyVillagePlayerController::TryInteraction()
 			UE_LOG(LogTemp, Log, TEXT("TOO FAR AWAY"));
 		}
 	}
+}
+
+void AThyVillagePlayerController::OnBeginInteraction(AThyVillageInteractableActor* const InteractionObject)
+{
+	if (CurrentlyInteractingWith == InteractionObject)
+	{
+		return;
+	}
+
+	if (CurrentlyInteractingWith)
+	{
+		CurrentlyInteractingWith->EndInteraction(this);
+	}
+
+	CurrentlyInteractingWith = InteractionObject;
+}
+
+void AThyVillagePlayerController::OnEndInteraction(AThyVillageInteractableActor* const InteractionObject)
+{
+	CurrentlyInteractingWith = nullptr;
 }
