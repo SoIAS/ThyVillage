@@ -68,4 +68,5 @@ DerivedDataCache/*
 .ctrlp_cache/
 
 Content/NoVCS
+Content/Assets
 .vs

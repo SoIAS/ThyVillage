@@ -3,6 +3,10 @@
 #include "ThyVillageInventoryManager.h"
 #include "TheVillageInventoryComponent.h"
 #include "ThyVillagePlayerController.h"
+#include "ThyVillageBlueprintLibrary.h"
+#include "ThyVillageSingleton.h"
+
+#include "Runtime/Engine/Classes/GameFramework/Pawn.h"
 
 UThyVillageInventoryManager::UThyVillageInventoryManager()
 {
@@ -116,6 +120,14 @@ void UThyVillageInventoryManager::PickupItem(UThyVillageItem* const Item, int32 
 
 	if(Amount > 0)
 	{
-		// spawn new pikcup item
+		const auto ThyVillageSingleton = UThyVillageBlueprintLibrary::GetThyVillageSingleton();
+		const auto DropLocation = OwningPlayerController->GetPawn()->GetActorLocation();
+
+		UThyVillageBlueprintLibrary::SpawnPickupActor(
+			OwningPlayerController,
+			ThyVillageSingleton->GetPickupActorSubclass(),
+			DropLocation,
+			Item,
+			Amount);
 	}
 }

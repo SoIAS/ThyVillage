@@ -18,8 +18,10 @@ void AThyVillagePickupActor::OnBeginInteraction_Implementation(AThyVillagePlayer
 		return;
 	}
 
+	// If object is not able to pickup the item, it will be dropped again, so as far as we are concerned, the item was picked up
 	PlayerController->GetInventoryManager()->PickupItem(PickupItem.Item, PickupItem.StackSize);
 	PickupItem = {};
+	bPickedUp = true;
 
 	EndInteraction(PlayerController);
 

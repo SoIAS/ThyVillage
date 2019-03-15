@@ -7,6 +7,8 @@
 #include "Styling/SlateBrush.h"
 #include "ThyVillageItem.generated.h"
 
+class UStaticMesh;
+
 UCLASS(Abstract, BlueprintType)
 class THYVILLAGE_API UThyVillageItem : public UPrimaryDataAsset
 {
@@ -48,6 +50,11 @@ public:
 		return MaxStackSize > 1;
 	}
 
+	FORCEINLINE TAssetPtr<UStaticMesh> GetStaticMesh() const
+	{
+		return StaticMesh;
+	}
+
 protected:
 	// TODO (it  is set to visibleanywhere, but its still editable in editor - check it)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Item)
@@ -65,6 +72,9 @@ protected:
 	/* Item is not stackable if max stack size is set to 1 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Inventory, meta = (ClampMin = 1))
 	int32 MaxStackSize;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Item)
+	TAssetPtr<UStaticMesh> StaticMesh;
 
 	// todo,consumable (is consumable, consumable effect)
 	// maxinventoryCount?
